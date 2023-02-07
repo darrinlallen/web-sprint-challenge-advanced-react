@@ -37,8 +37,8 @@ export default function AppFunctional(props) {
   }
   else {
     setmessage ("You can't go left")
-  setx(x)
-  sety(y)
+  setx(1)
+  sety(1)
   }
   }
   function onChangeR() {
@@ -51,8 +51,8 @@ export default function AppFunctional(props) {
   setmoves(moves+1)}
   else {
     setmessage("You can't go right")
-    setx(x)
-    sety(y)
+    setx(3)
+    sety(3)
   }
   }
   function onChangeU() {
