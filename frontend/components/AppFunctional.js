@@ -15,15 +15,18 @@ export default function AppFunctional(props) {
   const [x, setx] = useState(2)
   const [y, sety] = useState(2)
   const [indy, setindy] = useState(initialIndex)
-  
+  const [coordinates, setcoordinates] = useState('(0,0')
+  const [steps, setsteps] = useState('')
   function reset() {
     // Use this helper to reset all states to their initial values.
    initialMessage = ''
   initialEmail = ''
+  
    setmoves(0)
      setindy(4) // the index the "B" is at
      setx(2)
      sety(2)
+     setcoordinates(`(${x},${y})`)
       }
 
   function onChangeL() {
@@ -31,14 +34,60 @@ export default function AppFunctional(props) {
   if (indy >= 1){
     setmessage('')
     setindy(indy -1)
+
+ if  (x ==1 && y ==3){
+  setx(3)
+  sety(2)
+  setmoves(moves+1)
+  setsteps(`You moved ${moves} times`)
+  setcoordinates(`(${x},${y})`)
+ 
+setsteps(`You moved ${moves} times`)
+}
+else if (x==1 && y==2){
+  setx(3)
+  sety(1)
+  setcoordinates(`(${x},${y})`)
+  setmoves(moves+1)
+  setsteps(`You moved ${moves} times`)
+
+
+}
+else if (x==3 && y==1){
+setx(1)
+sety(2)
+setcoordinates(`(${x},${y})`)
+
+setmoves(moves+1)
+setsteps(`You moved ${moves} times`)
+
+
+}
+else if(x==3 && y==2){
+  setx(1)
+  sety(3)
+  setcoordinates(`(${x},${y})`)
+  setmoves(moves+1)
+  setsteps(`You moved ${moves} times`)
+
+}
+else{
   setx(x-1)
   sety(y)
+  setcoordinates(`(${x},${y})`)
   setmoves(moves+1)
+
+
+  setsteps(`You moved ${moves} times`)
+
   }
+}
   else {
     setmessage ("You can't go left")
   setx(1)
   sety(1)
+  setcoordinates(`(${x},${y})`)
+
   }
   }
   function onChangeR() {
@@ -46,13 +95,44 @@ export default function AppFunctional(props) {
   if (indy < 8){
     setmessage('')
     setindy(indy +1)
-  setx(x+1)
-  sety(y)
-  setmoves(moves+1)}
+ 
+  
+    if (x==3 && y==1){
+    setx(1)
+    sety(2)
+    setcoordinates(`(${x},${y})`)
+
+    setmoves(moves+1)
+    setsteps(`You moved ${moves} times`)
+
+    }
+    else if(x==3 && y==2){
+      setx(1)
+      sety(3)
+      setcoordinates(`(${x},${y})`)
+
+      setmoves(moves+1)
+
+      setsteps(`You moved ${moves} times`)
+
+    }
+    else{
+      setx(x+1)
+      sety(y)
+      setcoordinates(`(${x},${y})`)
+
+      setmoves(moves+1)
+
+      setsteps(`You moved ${moves} times`)
+
+      }
+    }
   else {
     setmessage("You can't go right")
     setx(3)
     sety(3)
+    setcoordinates(`(${x},${y})`)
+
   }
   }
   function onChangeU() {
@@ -62,11 +142,18 @@ export default function AppFunctional(props) {
     setindy(indy -3)
   sety(y-1)
   setx(x)
-  setmoves(moves+1)}
+  setcoordinates(`(${x},${y})`)
+
+  setmoves(moves+1)
+
+  setsteps(`You moved ${moves} times`)
+ }
   else {
     setmessage("You can't go up")
     setx(x)
     sety(y)
+    setcoordinates(`(${x},${y})`)
+
     setindy(indy)
   }
   }
@@ -77,24 +164,29 @@ export default function AppFunctional(props) {
     setindy(indy + 3)
   sety(y+1)
   setx(x)
-  setmoves(moves+1)}
+  setcoordinates(`(${x},${y})`)
+
+  setmoves(moves+1)
+
+  setsteps(`You moved ${moves} times`)
+  }
   else {
     setmessage("You can't go down")
     sety(y)
     setx(x)
+    setcoordinates(`(${x},${y})`)
+
   }
   }
 
-  function onSubmit(evt) {
-    // Use a POST request to send a payload to the server.
-  }
+
+  
 
   return (
     <div id="wrapper" className={props.className}>
       <div className="info">
         <h3 id="coordinates">Coordinates ({x}, {y})</h3>
         <h3 id="steps">You moved {moves} times</h3>
-        <h3 id="message">{message} </h3>
       </div>
       <div id="grid">
         {
@@ -106,7 +198,8 @@ export default function AppFunctional(props) {
         }
       </div>
       <div className="info">
-        <h3 id="message"></h3>
+      <h3 id="message">{message} </h3>
+
       </div>
       <div id="keypad">
         <button onClick={onChangeL} id="left">LEFT</button>
@@ -115,7 +208,7 @@ export default function AppFunctional(props) {
         <button onClick={onChangeD} id="down">DOWN</button>
         <button onClick={reset} id="reset">reset</button>
       </div>
-      <form>
+      <form >
         <input id="email" type="email" placeholder="type email"></input>
         <input id="submit" type="submit"></input>
       </form>
