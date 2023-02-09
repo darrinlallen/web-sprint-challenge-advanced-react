@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import React  from 'react'
 
 // Suggested initial states
@@ -15,23 +15,25 @@ export default function AppFunctional(props) {
   const [x, setx] = useState(2)
   const [y, sety] = useState(2)
   const [indy, setindy] = useState(initialIndex)
-  const [coordinates, setcoordinates] = useState('(0,0')
-  const [steps, setsteps] = useState('')
+  const [coordinates, setcoordinates] = useState('(2,2)')
+  const [steps, setsteps] = useState('You moved 0 times')
   function reset() {
     // Use this helper to reset all states to their initial values.
    initialMessage = ''
   initialEmail = ''
   
    setmoves(0)
+   setsteps(0)
      setindy(4) // the index the "B" is at
      setx(2)
      sety(2)
      setcoordinates(`(${x},${y})`)
       }
 
-  function onChangeL() {
+  function onChangeL(async) {
     // You will need this to update the value of the input    
-  if (indy >= 1){
+
+    if (indy >= 1){
     setmessage('')
     setindy(indy -1)
 
@@ -41,6 +43,7 @@ export default function AppFunctional(props) {
   setmoves(moves+1)
   setsteps(`You moved ${moves} times`)
   setcoordinates(`(${x},${y})`)
+
  
 setsteps(`You moved ${moves} times`)
 }
@@ -70,6 +73,7 @@ else if(x==3 && y==2){
   setmoves(moves+1)
   setsteps(`You moved ${moves} times`)
 
+
 }
 else{
   setx(x-1)
@@ -81,6 +85,7 @@ else{
   setsteps(`You moved ${moves} times`)
 
   }
+
 }
   else {
     setmessage ("You can't go left")
@@ -88,9 +93,12 @@ else{
   sety(1)
   setcoordinates(`(${x},${y})`)
 
-  }
+  }         
+
+
   }
   function onChangeR() {
+  
     // You will need this to update the value of the input    
   if (indy < 8){
     setmessage('')
@@ -134,20 +142,25 @@ else{
     setcoordinates(`(${x},${y})`)
 
   }
+
+
   }
   function onChangeU() {
+    
     // You will need this to update the value of the input    
  if (y > 1){
+
   setmessage('')
     setindy(indy -3)
   sety(y-1)
   setx(x)
   setcoordinates(`(${x},${y})`)
 
-  setmoves(moves+1)
+ setmoves(moves+1)
 
-  setsteps(`You moved ${moves} times`)
- }
+useEffect(()=> {setsteps(`You moved ${indy} times`)},[indy])
+ } 
+ 
   else {
     setmessage("You can't go up")
     setx(x)
@@ -157,8 +170,11 @@ else{
     setindy(indy)
   }
   }
+
+  
   function onChangeD() {
     // You will need this to update the value of the input    
+    
   if (y < 3){
     setmessage('')
     setindy(indy + 3)
@@ -177,6 +193,7 @@ else{
     setcoordinates(`(${x},${y})`)
 
   }
+
   }
 
 
@@ -185,8 +202,8 @@ else{
   return (
     <div id="wrapper" className={props.className}>
       <div className="info">
-        <h3 id="coordinates">Coordinates ({x}, {y})</h3>
-        <h3 id="steps">You moved {moves} times</h3>
+        <h3 id="coordinates">Coordinates {x},{y}</h3>
+        <h3 id="steps">`You moved {moves} times</h3>
       </div>
       <div id="grid">
         {
