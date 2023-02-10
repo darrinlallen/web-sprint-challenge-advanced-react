@@ -1,4 +1,4 @@
-import React from 'react'
+import React  from 'react'
 
 // Suggested initial states
 const initialMessage = ''
@@ -18,8 +18,7 @@ constructor(props){
     x: 2,
     y: 2,
     indy: 4,
-    steps: '',
-    coordinates: ''
+    email: ''
   
   }
 
@@ -35,42 +34,29 @@ if (this.state.indy >= 1){
     this.setState({x: 3})
     this.setState({y: 2})
     this.setState({moves: this.state.moves + 1})
-    this.setState({coordinates: `((${this.state.x},${this.state.y}))`})
-
-    this.setState({steps:`You moved ${this.state.moves} times`})
+  
   }
   else if (this.state.x==1 && this.state.y==2){
     this.setState({x: 3})
 this.setState({y: 1})
 this.setState({moves: this.state.moves + 1})
- this.setState({coordinates: `((${this.state.x},${this.state.y}))`})
-
-this.setState({steps:`You moved ${this.state.moves} times`})
+ 
   }
   else if (this.state.x==3 && this.state.y==1){
     this.setState({x: 1})
     this.setState({y: 2})
     this.setState({moves: this.state.moves + 1})
-    this.setState({coordinates: `((${this.state.x},${this.state.y}))`})
-
-    this.setState({steps:`You moved ${this.state.moves} times`})
-
   }
   else if(this.state.x==3 && this.state.y==2){
     this.setState({x: 1})
 this.setState({y: 3})
 this.setState({moves: this.state.moves + 1})
-this.setState({coordinates: `((${this.state.x},${this.state.y}))`})
-
-this.setState({steps:`You moved ${this.state.moves} times`})
-  }
+ }
   else {
       this.setState({x: this.state.x-1})
       this.setState({y: this.state.y})
       this.setState({moves: this.state.moves+1})
-      this.setState({coordinates: `((${this.state.x},${this.state.y}))`})
-
-      this.setState({steps:`You moved ${this.state.moves} times`})
+    
   }
   }
 else {
@@ -92,26 +78,19 @@ if (this.state.indy <8){
   this.setState({x: 1})
 this.setState({y: 2})
 this.setState({moves: this.state.moves + 1})
-this.setState({coordinates: `((${this.state.x},${this.state.y}))`})
-
-this.setState({steps:`You moved ${this.state.moves} times`})
   }
   else if(this.state.x==3 && this.state.y==2){
     this.setState({x: 1})
 this.setState({y: 3})
 this.setState({moves: this.state.moves + 1})
-this.setState({coordinates: `((${this.state.x},${this.state.y}))`})
 
-this.setState({steps:`You moved ${this.state.moves} times`})
   }
 
   else {
     this.setState({x: this.state.x+1})
     this.setState({y: this.state.y})
     this.setState({moves: this.state.moves+1})
-    this.setState({coordinates: `((${this.state.x},${this.state.y}))`})
-
-    this.setState({steps:`You moved ${this.state.moves} times`})
+  
 }
 }
 else {
@@ -130,9 +109,7 @@ if (this.state.y > 1){
 this.setState({x: this.state.x})
 this.setState({y: this.state.y-1})
 this.setState({moves: this.state.moves + 1})
-this.setState({coordinates: `((${this.state.x},${this.state.y}))`})
 
-this.setState({steps:`You moved ${this.state.moves} times`})
 }
 else {
   this.setState({message: "You can't go up"})
@@ -148,9 +125,7 @@ if (this.state.y <3){
 this.setState({x: this.state.x})
 this.setState({y: this.state.y+1})
 this.setState({moves: this.state.moves + 1})
-this.setState({coordinates: `((${this.state.x},${this.state.y}))`})
 
-this.setState({steps:`You moved ${this.state.moves} times`})
 }
 else {
   this.setState.message({message:"You can't go down"})
@@ -169,6 +144,28 @@ this.setState({y: 2})
 this.setState({moves: 0})
 }
 }
+ submit = ()=> event => {
+  event.preventDefault();
+  this.setState({email: event.target.email.value})
+  const emails = event.target.email.value;
+console.log('kjhgfd')
+  const newOrder = { "x": this.state.x, "y": this.state.y, "steps": this.state.moves, "email": emails }
+  console.log(newOrder)
+  this.setState({moves: 0})
+   this.setState({indy:4}) // the index the "B" is at
+   this.setState({x:2})
+   this.setState({y:2})
+  axios.post('http://localhost:9000/api/result', newOrder)   
+  .then(res => {
+    
+    
+})
+  .catch(err => {
+    
+  })
+}
+
+
 
 
 
@@ -177,7 +174,7 @@ this.setState({moves: 0})
     return (
       <div id="wrapper" className={className}>
         <div className="info">
-          <h3 id="coordinates">Coordinates {this.state.x}, {this.state.y})</h3>
+          <h3 id="coordinates">Coordinates {this.state.x}, {this.state.y}</h3>
           <h3 id="steps">You moved {this.state.moves} times</h3>
           <h3 id="message">{this.state.message}</h3>
 
@@ -201,7 +198,7 @@ this.setState({moves: 0})
           <button onClick={this.onChangeD} id="down">DOWN</button>
           <button onClick={this.reset} id="reset">reset</button>
         </div>
-        <form>
+        <form onSubmit={this.submit}>
           <input id="email" type="email" placeholder="type email"></input>
           <input id="submit" type="submit"></input>
         </form>

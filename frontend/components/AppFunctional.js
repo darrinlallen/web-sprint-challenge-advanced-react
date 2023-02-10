@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react"
+import { useState} from "react"
 import React  from 'react'
-
+import axios from 'axios'
 // Suggested initial states
 let initialMessage = ''
 let initialEmail = ''
@@ -15,22 +15,20 @@ export default function AppFunctional(props) {
   const [x, setx] = useState(2)
   const [y, sety] = useState(2)
   const [indy, setindy] = useState(initialIndex)
-  const [coordinates, setcoordinates] = useState('(2,2)')
-  const [steps, setsteps] = useState('You moved 0 times')
+  const [email, setemail] = useState('')  
   function reset() {
     // Use this helper to reset all states to their initial values.
    initialMessage = ''
   initialEmail = ''
   
    setmoves(0)
-   setsteps(0)
      setindy(4) // the index the "B" is at
      setx(2)
      sety(2)
-     setcoordinates(`(${x},${y})`)
+     setemail('')
       }
 
-  function onChangeL(async) {
+  function onChangeL() {
     // You will need this to update the value of the input    
 
     if (indy >= 1){
@@ -41,48 +39,22 @@ export default function AppFunctional(props) {
   setx(3)
   sety(2)
   setmoves(moves+1)
-  setsteps(`You moved ${moves} times`)
-  setcoordinates(`(${x},${y})`)
-
- 
-setsteps(`You moved ${moves} times`)
+  
 }
 else if (x==1 && y==2){
   setx(3)
   sety(1)
-  setcoordinates(`(${x},${y})`)
   setmoves(moves+1)
-  setsteps(`You moved ${moves} times`)
 
 
 }
-else if (x==3 && y==1){
-setx(1)
-sety(2)
-setcoordinates(`(${x},${y})`)
-
-setmoves(moves+1)
-setsteps(`You moved ${moves} times`)
 
 
-}
-else if(x==3 && y==2){
-  setx(1)
-  sety(3)
-  setcoordinates(`(${x},${y})`)
-  setmoves(moves+1)
-  setsteps(`You moved ${moves} times`)
-
-
-}
 else{
   setx(x-1)
   sety(y)
-  setcoordinates(`(${x},${y})`)
+
   setmoves(moves+1)
-
-
-  setsteps(`You moved ${moves} times`)
 
   }
 
@@ -91,7 +63,6 @@ else{
     setmessage ("You can't go left")
   setx(1)
   sety(1)
-  setcoordinates(`(${x},${y})`)
 
   }         
 
@@ -108,38 +79,30 @@ else{
     if (x==3 && y==1){
     setx(1)
     sety(2)
-    setcoordinates(`(${x},${y})`)
+
 
     setmoves(moves+1)
-    setsteps(`You moved ${moves} times`)
-
+  
     }
     else if(x==3 && y==2){
       setx(1)
       sety(3)
-      setcoordinates(`(${x},${y})`)
-
+  
       setmoves(moves+1)
 
-      setsteps(`You moved ${moves} times`)
 
     }
     else{
       setx(x+1)
       sety(y)
-      setcoordinates(`(${x},${y})`)
 
       setmoves(moves+1)
-
-      setsteps(`You moved ${moves} times`)
-
       }
     }
   else {
     setmessage("You can't go right")
     setx(3)
     sety(3)
-    setcoordinates(`(${x},${y})`)
 
   }
 
@@ -154,19 +117,15 @@ else{
     setindy(indy -3)
   sety(y-1)
   setx(x)
-  setcoordinates(`(${x},${y})`)
-
  setmoves(moves+1)
 
-useEffect(()=> {setsteps(`You moved ${indy} times`)},[indy])
  } 
  
   else {
     setmessage("You can't go up")
     setx(x)
     sety(y)
-    setcoordinates(`(${x},${y})`)
-
+    
     setindy(indy)
   }
   }
@@ -180,22 +139,38 @@ useEffect(()=> {setsteps(`You moved ${indy} times`)},[indy])
     setindy(indy + 3)
   sety(y+1)
   setx(x)
-  setcoordinates(`(${x},${y})`)
-
   setmoves(moves+1)
 
-  setsteps(`You moved ${moves} times`)
   }
   else {
     setmessage("You can't go down")
     sety(y)
     setx(x)
-    setcoordinates(`(${x},${y})`)
-
+    
   }
 
   }
+  const submit = event => {
+    event.preventDefault();
+    setemail(event.target.email.value)
+    const emails = event.target.email.value;
 
+    const newOrder = { "x": x, "y": y, "steps": moves, "email": emails }
+    console.log(newOrder)
+    setmoves(0)
+     setindy(4) // the index the "B" is at
+     setx(2)
+     sety(2)
+     setemail('')
+    axios.post('http://localhost:9000/api/result', newOrder)   
+    .then(res => {
+      
+      
+  })
+    .catch(err => {
+      
+    })
+  }
 
   
 
@@ -225,7 +200,7 @@ useEffect(()=> {setsteps(`You moved ${indy} times`)},[indy])
         <button onClick={onChangeD} id="down">DOWN</button>
         <button onClick={reset} id="reset">reset</button>
       </div>
-      <form >
+      <form onSubmit={submit}>
         <input id="email" type="email" placeholder="type email"></input>
         <input id="submit" type="submit"></input>
       </form>
