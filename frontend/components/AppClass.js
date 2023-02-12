@@ -1,4 +1,5 @@
 import React  from 'react'
+import axios from 'axios'
 
 // Suggested initial states
 const initialMessage = ''
@@ -28,35 +29,26 @@ onChangeL = ()=> {
   // You will need this to update the value of the input    
 if (this.state.indy >= 1){
   this.setState({message: ''})
-  this.setState({indy: this.state.indy -1})
 
   if  (this.state.x ==1 && this.state.y ==3){
-    this.setState({x: 3})
-    this.setState({y: 2})
-    this.setState({moves: this.state.moves + 1})
-  
+    this.setState({x: 1})
+    this.setState({y: 3})
+    this.setState({message: "You can't go left"})
+
   }
   else if (this.state.x==1 && this.state.y==2){
-    this.setState({x: 3})
-this.setState({y: 1})
-this.setState({moves: this.state.moves + 1})
- 
-  }
-  else if (this.state.x==3 && this.state.y==1){
     this.setState({x: 1})
-    this.setState({y: 2})
-    this.setState({moves: this.state.moves + 1})
+this.setState({y: 2})
+this.setState({message: "You can't go left"})
+
   }
-  else if(this.state.x==3 && this.state.y==2){
-    this.setState({x: 1})
-this.setState({y: 3})
-this.setState({moves: this.state.moves + 1})
- }
+
   else {
       this.setState({x: this.state.x-1})
       this.setState({y: this.state.y})
       this.setState({moves: this.state.moves+1})
-    
+      this.setState({indy: this.state.indy -1})
+  
   }
   }
 else {
@@ -70,19 +62,19 @@ onChangeR = ()=> {
   // You will need this to update the value of the input    
 if (this.state.indy <8){
   this.setState({message: ''})
-  this.setState({indy: this.state.indy +1})
 
 
   if (this.state.x==3 && this.state.y==1){
 
-  this.setState({x: 1})
-this.setState({y: 2})
-this.setState({moves: this.state.moves + 1})
+  this.setState({x: 3})
+this.setState({y: 1})
+this.setState({message: "You can't go right"})
+
   }
   else if(this.state.x==3 && this.state.y==2){
-    this.setState({x: 1})
-this.setState({y: 3})
-this.setState({moves: this.state.moves + 1})
+    this.setState({x: 3})
+this.setState({y: 2})
+this.setState({message: "You can't go right"})
 
   }
 
@@ -90,7 +82,8 @@ this.setState({moves: this.state.moves + 1})
     this.setState({x: this.state.x+1})
     this.setState({y: this.state.y})
     this.setState({moves: this.state.moves+1})
-  
+    this.setState({indy: this.state.indy +1})
+
 }
 }
 else {
@@ -148,6 +141,9 @@ this.setState({moves: 0})
   event.preventDefault();
   this.setState({email: event.target.email.value})
   const emails = event.target.email.value;
+  if (emails == ''){
+    this.setState({message: "Ouch: email is required"})
+  }else {
 console.log('kjhgfd')
   const newOrder = { "x": this.state.x, "y": this.state.y, "steps": this.state.moves, "email": emails }
   console.log(newOrder)
@@ -164,7 +160,7 @@ console.log('kjhgfd')
     
   })
 }
-
+ }
 
 
 
@@ -174,7 +170,7 @@ console.log('kjhgfd')
     return (
       <div id="wrapper" className={className}>
         <div className="info">
-          <h3 id="coordinates">Coordinates {this.state.x}, {this.state.y}</h3>
+          <h3 id="coordinates">({this.state.x}, {this.state.y})</h3>
           <h3 id="steps">You moved {this.state.moves} times</h3>
           <h3 id="message">{this.state.message}</h3>
 
@@ -199,7 +195,7 @@ console.log('kjhgfd')
           <button onClick={this.reset} id="reset">reset</button>
         </div>
         <form onSubmit={this.submit}>
-          <input id="email" type="email" placeholder="type email"></input>
+          <input id="email" type="email" placeholder="type email" required></input>
           <input id="submit" type="submit"></input>
         </form>
       </div>

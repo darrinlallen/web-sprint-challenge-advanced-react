@@ -33,19 +33,17 @@ export default function AppFunctional(props) {
 
     if (indy >= 1){
     setmessage('')
-    setindy(indy -1)
 
  if  (x ==1 && y ==3){
-  setx(3)
-  sety(2)
-  setmoves(moves+1)
+  setx(1)
+  sety(3)
+  setmessage("You cant move left")
   
 }
 else if (x==1 && y==2){
-  setx(3)
-  sety(1)
-  setmoves(moves+1)
-
+  setx(1)
+  sety(2)
+setmessage("You can't move left")
 
 }
 
@@ -53,7 +51,7 @@ else if (x==1 && y==2){
 else{
   setx(x-1)
   sety(y)
-
+setindy(indy-1)
   setmoves(moves+1)
 
   }
@@ -73,29 +71,28 @@ else{
     // You will need this to update the value of the input    
   if (indy < 8){
     setmessage('')
-    setindy(indy +1)
  
   
     if (x==3 && y==1){
-    setx(1)
-    sety(2)
+    setx(3)
+    sety(1)
 
 
-    setmoves(moves+1)
+    setmessage("You can't move right")
   
     }
     else if(x==3 && y==2){
-      setx(1)
-      sety(3)
+      setx(3)
+      sety(2)
   
-      setmoves(moves+1)
+      setmessage("You can't move right")
 
 
     }
     else{
       setx(x+1)
       sety(y)
-
+      setindy(indy+1)
       setmoves(moves+1)
       }
     }
@@ -154,7 +151,6 @@ else{
     event.preventDefault();
     setemail(event.target.email.value)
     const emails = event.target.email.value;
-
     const newOrder = { "x": x, "y": y, "steps": moves, "email": emails }
     console.log(newOrder)
     setmoves(0)
@@ -170,6 +166,7 @@ else{
     .catch(err => {
       
     })
+  
   }
 
   
@@ -177,7 +174,7 @@ else{
   return (
     <div id="wrapper" className={props.className}>
       <div className="info">
-        <h3 id="coordinates">Coordinates {x},{y}</h3>
+        <h3 id="coordinates">({x},{y})</h3>
         <h3 id="steps">`You moved {moves} times</h3>
       </div>
       <div id="grid">
@@ -201,7 +198,7 @@ else{
         <button onClick={reset} id="reset">reset</button>
       </div>
       <form onSubmit={submit}>
-        <input id="email" type="email" placeholder="type email"></input>
+        <input id="email" type="email" placeholder="type email" required></input>
         <input id="submit" type="submit"></input>
       </form>
     </div>
