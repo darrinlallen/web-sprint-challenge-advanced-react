@@ -201,7 +201,7 @@ return this.setState({message: msg})
       <div id="wrapper" className={className}>
         <div className="info">
         <h3 id="coordinates">Coordinates ({this.state.x}, {this.state.y})</h3>
-          <h3 id="steps">You moved {this.state.steps} times</h3>
+          <h3 id="steps">You moved {this.state.steps}{this.state.steps==1 ? " time" : " times"}</h3>
 
         </div>
         <div id="grid">

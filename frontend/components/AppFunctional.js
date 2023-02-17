@@ -39,7 +39,7 @@ export default function AppFunctional(props) {
   function onChangeL() {
     // You will need this to update the value of the input    
 
-    if (index >= 1){
+    if (index >= 0){
     setmessage('')
 
  if  (x ==1 && y ==3){
@@ -77,7 +77,7 @@ setmessage("You can't go left")
   function onChangeR() {
   
     // You will need this to update the value of the input    
-  if (index < 8){
+  if (index <= 8){
     setmessage('')
  
   
@@ -105,6 +105,7 @@ setmessage("You can't go left")
     sety(3)
 
   }
+
   else{
     setx(x+1)
     sety(y)
@@ -210,7 +211,7 @@ console.log(mailman)
     <div id="wrapper" className={props.className}>
       <div className="info">
         <h3 id="coordinates">Coordinates ({x}, {y})</h3>
-        <h3 id="steps">You moved {steps} times</h3>
+        <h3 id="steps">You moved {steps} {steps==1 ? "time" : "times"}</h3>
       </div>
       <div id="grid">
         {
