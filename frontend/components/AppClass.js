@@ -139,6 +139,8 @@ this.setState({x: 2})
 this.setState({y: 2})
 this.setState({steps: 0})
    msg =''
+   this.setState({mailman: ''})
+
 }}
 
 handle = (msg) =>{

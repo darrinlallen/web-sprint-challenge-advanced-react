@@ -45,13 +45,13 @@ export default function AppFunctional(props) {
  if  (x ==1 && y ==3){
   setx(1)
   sety(3)
-  setmessage("You cant move left")
+  setmessage("You can't go left")
   
 }
 else if (x==1 && y==2){
   setx(1)
   sety(2)
-setmessage("You can't move left")
+setmessage("You can't go left")
 
 }
 
@@ -86,14 +86,14 @@ setmessage("You can't move left")
     sety(1)
 
 
-    setmessage("You can't move right")
+    setmessage("You can't go right")
   
     }
     else if(x==3 && y==2){
       setx(3)
       sety(2)
   
-      setmessage("You can't move right")
+      setmessage("You can't go right")
 
 
     }
@@ -168,7 +168,6 @@ console.log(mailman)
     const code = (((x + 1) * (y + 2)) * (steps + 1)) + emails.length
     const newOrder = { "x": x, "y": y, "steps": steps, "email": emails }
     console.log(newOrder)
-    event.target.email.value = ''
   
     msg = `${emails.split('@')[0]} win #${code}`
   
@@ -210,7 +209,7 @@ console.log(mailman)
   return (
     <div id="wrapper" className={props.className}>
       <div className="info">
-        <h3 id="coordinates">Coordinates ({x}, {y}) </h3>
+        <h3 id="coordinates">Coordinates ({x}, {y})</h3>
         <h3 id="steps">You moved {steps} times</h3>
       </div>
       <div id="grid">
