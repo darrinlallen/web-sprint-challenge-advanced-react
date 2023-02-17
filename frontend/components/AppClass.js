@@ -9,7 +9,7 @@ const initialIndex = 4 // the index the "B" is at
 let schema = yup.object().shape({
   email: yup.string().email().required("Ouch: email is required")
 })
-
+let msg = ''
 export default class AppClass extends React.Component {
   // THE FOLLOWING HELPERS ARE JUST RECOMMENDATIONS.
   // You can delete them and build your own logic from scratch.
@@ -17,13 +17,15 @@ constructor(props){
   super(props)
   this.state ={
     message: '',
-    moves: 0,
+    steps: 0,
     x: 2,
     y: 2,
     index: 4,
-    email: ''
+    email: '',
+    mailman: ''
   
   }
+  this.submit = this.submit.bind(this)
 
 }
   // You will need this to update the value of the input    
@@ -48,16 +50,15 @@ this.setState({message: "You can't go left"})
   else {
       this.setState({x: this.state.x-1})
       this.setState({y: this.state.y})
-      this.setState({moves: this.state.moves+1})
+      this.setState({steps: this.state.steps+1})
       this.setState({index: this.state.index -1})
   
   }
   }
 else {
   this.setState({message: "You can't go left"})
-this.setState({x: 1})
-this.setState({y:1})
-
+//this.setState({x: 1})
+//this.setState({y:1})
 }
 }
 onChangeR = ()=> {
@@ -83,7 +84,7 @@ this.setState({message: "You can't go right"})
   else {
     this.setState({x: this.state.x+1})
     this.setState({y: this.state.y})
-    this.setState({moves: this.state.moves+1})
+    this.setState({steps: this.state.steps+1})
     this.setState({index: this.state.index +1})
 
 }
@@ -103,7 +104,7 @@ if (this.state.y > 1){
   this.setState({index: this.state.index -3})
 this.setState({x: this.state.x})
 this.setState({y: this.state.y-1})
-this.setState({moves: this.state.moves + 1})
+this.setState({steps: this.state.steps + 1})
 
 }
 else {
@@ -119,11 +120,11 @@ if (this.state.y <3){
   this.setState({index: this.state.index +3})
 this.setState({x: this.state.x})
 this.setState({y: this.state.y+1})
-this.setState({moves: this.state.moves + 1})
+this.setState({steps: this.state.steps + 1})
 
 }
 else {
-  this.setState.message({message:"You can't go down"})
+  this.setState({message:"You can't go down"})
 this.setState({x:this.state.x})
 this.setState({y:3})
 }
@@ -131,23 +132,31 @@ this.setState({y:3})
 reset = ()=> {
   // You will need this to update the value of the input
     
-if (this.state.index >= 1){
+if (this.state.index >= 0){
   this.setState({message: ''})
   this.setState({index: 4})
 this.setState({x: 2})
 this.setState({y: 2})
-this.setState({moves: 0})
-}
-}
+this.setState({steps: 0})
+   msg =''
+}}
 
+handle = (msg) =>{
+return this.setState({message: msg})
+}
  submit = (event) => {
   event.preventDefault();
-  const emails = event.target.email.value;
-  event.target.email.value = ''
-console.log('kjhgfd')
-  const newOrder = { "x": this.state.x, "y": this.state.y, "steps": this.state.moves, "email": emails }
+  const emails = this.state.mailman;
+    const code = (((this.state.x + 1) * (this.state.y + 2)) * (this.state.steps + 1)) + emails.length
+   
+    msg = `${emails.split('@')[0]} win #${code}`
+    this.handle(msg)
+  
+    console.log(this.state.message)
+    console.log("mmmmmmm")
+  const newOrder = { "x": this.state.x, "y": this.state.y, "steps": this.state.steps, "email": emails }
   console.log(newOrder)
-  this.reset()
+ 
   schema
   .validate({
     email: emails,
@@ -155,22 +164,29 @@ console.log('kjhgfd')
   .catch((err) => {
     console.log(err.name); // ValidationError
     console.log(err.errors); // ['Not a proper email']
-  });
-   axios.post('http://localhost:9000/api/result', newOrder)   
-    .then(res => {
-        
-  })
-    .catch(err => {
+    this.setState({message: "Ouch: email must be a valid email"})
+    ;})
+  if (emails == 'foo@bar.baz'){
+    this.setState({message:`${emails} failure #${code}`})
+
+  }
+  else if ( emails == ''){
+    this.setState({message: `Ouch: email is required`})
+
+
+  }
+  else {
+    axios.post('http://localhost:9000/api/result', newOrder)   
+      .then(res => {
+        this.setState({message: msg})
       
+   
     })
-  axios.post('http://localhost:9000/api/result', newOrder)   
-  .then(res => {
-    
-    
-})
-  .catch(err => {
-    
-  })
+      .catch(err => {
+        
+      })
+    }
+    this.setState({mailman: ''})
 
  }
 
@@ -182,9 +198,8 @@ console.log('kjhgfd')
     return (
       <div id="wrapper" className={className}>
         <div className="info">
-          <h3 id="coordinates">({this.state.x}, {this.state.y})</h3>
-          <h3 id="steps">You moved {this.state.moves} times</h3>
-          <h3 id="message">{this.state.message}</h3>
+        <h3 id="coordinates">Coordinates ({this.state.x}, {this.state.y})</h3>
+          <h3 id="steps">You moved {this.state.steps} times</h3>
 
         </div>
         <div id="grid">
@@ -197,7 +212,7 @@ console.log('kjhgfd')
           }
         </div>
         <div className="info">
-          <h3 id="message">{this.state.message}</h3>
+        <h3 id="message">{this.state.message}</h3>
         </div>
         <div id="keypad">
           <button onClick={this.onChangeL} id="left">LEFT</button>
@@ -207,7 +222,7 @@ console.log('kjhgfd')
           <button onClick={this.reset} id="reset">reset</button>
         </div>
         <form onSubmit={this.submit}>
-          <input id="email" type="email" placeholder="type email"></input>
+          <input  onChange={(event) => this.setState({mailman: event.target.value})} value={this.state.mailman} id="email" type="email" placeholder="type email" ></input>
           <input id="submit" type="submit"></input>
         </form>
       </div>

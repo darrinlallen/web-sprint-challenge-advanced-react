@@ -1,4 +1,4 @@
-import { useState} from "react"
+import { useEffect, useRef, useState} from "react"
 import React  from 'react'
 import axios from 'axios'
 import * as yup from 'yup'
@@ -6,8 +6,8 @@ import * as yup from 'yup'
 let initialMessage = ''
 let initialEmail = ''
 let initialSteps = 0
+let msg ='hbbhhinhnhi'
 let initialIndex = 4 // the index the "B" is at
-
 let schema = yup.object().shape({
   email: yup.string().email().required("Ouch: email is required")
 })
@@ -16,22 +16,23 @@ let schema = yup.object().shape({
 export default function AppFunctional(props) {
   // THE FOLLOWING HELPERS ARE JUST RECOMMENDATIONS.
   // You can delete them and build your own logic from scratch.
-  const  [moves, setmoves] = useState(0)
+  const  [steps, setsteps] = useState(0)
   const [message, setmessage] = useState(initialMessage)
   const [x, setx] = useState(2)
   const [y, sety] = useState(2)
   const [index, setindex] = useState(initialIndex)
   const [email, setemail] = useState('')  
-
+  const [mailman, setmailman] = useState('')
   function reset() {
     // Use this helper to reset all states to their initial values.
-   initialMessage = ''
-  initialEmail = ''
-  
-   setmoves(0)
+   
+   setsteps(0)
      setindex(4) // the index the "B" is at
      setx(2)
      sety(2)
+     setmessage('')
+     setmailman('')
+     setsteps(0)
     
       }
 
@@ -55,24 +56,24 @@ setmessage("You can't move left")
 }
 
 
-else{
-  setx(x-1)
-  sety(y)
-setindex(index-1)
-  setmoves(moves+1)
 
-  }
 
-}
-  else {
+  else if(x==1 && y==1) {
     setmessage ("You can't go left")
   setx(1)
   sety(1)
 
   }         
-
-
+  
+  else{
+    setx(x-1)
+    sety(y)
+  setindex(index-1)
+    setsteps(steps+1)
+  
+    }
   }
+}
   function onChangeR() {
   
     // You will need this to update the value of the input    
@@ -96,21 +97,21 @@ setindex(index-1)
 
 
     }
-    else{
-      setx(x+1)
-      sety(y)
-      setindex(index+1)
-      setmoves(moves+1)
-      }
-    }
-  else {
+ 
+    
+  else if(x==3 && y==3) {
     setmessage("You can't go right")
     setx(3)
     sety(3)
 
   }
-
-
+  else{
+    setx(x+1)
+    sety(y)
+    setindex(index+1)
+    setsteps(steps+1)
+    }
+  }
   }
   function onChangeU() {
     
@@ -121,7 +122,7 @@ setindex(index-1)
     setindex(index -3)
   sety(y-1)
   setx(x)
- setmoves(moves+1)
+ setsteps(steps+1)
 
  } 
  
@@ -132,19 +133,20 @@ setindex(index-1)
     
     setindex(index)
   }
-  }
+}
+  
 
   
   function onChangeD() {
     // You will need this to update the value of the input    
-    
+        
   if (y < 3){
     setmessage('')
     setindex(index + 3)
   sety(y+1)
   setx(x)
-  setmoves(moves+1)
-
+  setsteps(steps+1)
+  console.log(steps)
   }
   else {
     setmessage("You can't go down")
@@ -152,53 +154,64 @@ setindex(index-1)
     setx(x)
     
   }
-
-  }
-
-
-  const submit = event => {
-    event.preventDefault();
-    const emails = event.target.email.value;
-    const code = (((x + 1) * (y + 2)) * (moves + 1)) + emails.length
-    const newOrder = { "x": x, "y": y, "steps": moves, "email": emails }
-    console.log(newOrder)
-    setmessage(`${emails.split('@')[0]} win #${code}`)
-    event.target.email.value = ''
-    reset()
-    schema
-  .validate({
-    email: emails,
-  })
-  .catch((err) => {
-    console.log(err.name); // ValidationError
-    console.log(err.errors); // ['Not a proper email']
-  });
-  if (emails != ''){
-   axios.post('http://localhost:9000/api/result', newOrder)   
-    .then(res => {
-        
-  })
-    .catch(err => {
-      
-    })
-  }
-  else if ( emails == 'foo@bar.baz'){
-    setmessage(`${emails} failure #${code}`)
-
-  }
-  else {
-    setmessage(`Ouch: email is required`)
-
-  }
-  }
-
   
+
+  }
+ 
+
+function submit  (event) {
+//    const [message, setmessage] =useState('')
+event.preventDefault()
+console.log(message)   
+const emails = mailman;
+console.log(mailman)
+    const code = (((x + 1) * (y + 2)) * (steps + 1)) + emails.length
+    const newOrder = { "x": x, "y": y, "steps": steps, "email": emails }
+    console.log(newOrder)
+    event.target.email.value = ''
+  
+    msg = `${emails.split('@')[0]} win #${code}`
+  
+    console.log(message)
+   
+    schema
+    .validate({
+      email: emails,
+    })
+    .then(() =>  {
+    })
+    .catch((err) => {
+      console.log(err.name); // ValidationError
+      console.log(err.errors); // ['Not a proper email']
+      setmessage("Ouch: email must be a valid email")
+    });
+    if (emails == 'foo@bar.baz'){
+      setmessage(`${emails} failure #${code}`)
+  
+    }
+    else if ( emails == ''){
+      setmessage(`Ouch: email is required`)
+  
+  
+    }
+    else {
+      axios.post('http://localhost:9000/api/result', newOrder)   
+        .then(res => {
+          setmessage(msg)
+        
+      })
+        .catch(err => {
+          
+        })
+      }
+  setmailman('')  
+  } 
 
   return (
     <div id="wrapper" className={props.className}>
       <div className="info">
-        <h3 id="coordinates">({x}, {y}) </h3>
-        <h3 id="steps">You moved {moves} times</h3>
+        <h3 id="coordinates">Coordinates ({x}, {y}) </h3>
+        <h3 id="steps">You moved {steps} times</h3>
       </div>
       <div id="grid">
         {
@@ -210,7 +223,7 @@ setindex(index-1)
         }
       </div>
       <div className="info">
-      <h3 id="message">{message} </h3>
+      <h3 id="message">{message}</h3>
 
       </div>
       <div id="keypad">
@@ -220,11 +233,10 @@ setindex(index-1)
         <button onClick={onChangeD} id="down">DOWN</button>
         <button onClick={reset} id="reset">reset</button>
       </div>
-      <form onSubmit={submit}>
-        <input id="email" type="email" placeholder="type email"></input>
+      <form  onSubmit={submit}>
+        <input  onChange={(event) => setmailman(event.target.value)} value={mailman}id="email" type="email" placeholder="type email"></input>
         <input id="submit" type="submit"></input>
       </form>
     </div>
   )
 }
-
